@@ -1,0 +1,158 @@
+Aqui esta o código em .cypher utilizado no Projeto.
+
+// =====================
+// CONSTRAINTS
+// =====================
+
+CREATE CONSTRAINT user_id IF NOT EXISTS
+FOR (u:User) REQUIRE u.id IS UNIQUE;
+
+CREATE CONSTRAINT movie_id IF NOT EXISTS
+FOR (m:Movie) REQUIRE m.id IS UNIQUE;
+
+CREATE CONSTRAINT series_id IF NOT EXISTS
+FOR (s:Series) REQUIRE s.id IS UNIQUE;
+
+CREATE CONSTRAINT genre_id IF NOT EXISTS
+FOR (g:Genre) REQUIRE g.id IS UNIQUE;
+
+CREATE CONSTRAINT actor_id IF NOT EXISTS
+FOR (a:Actor) REQUIRE a.id IS UNIQUE;
+
+CREATE CONSTRAINT director_id IF NOT EXISTS
+FOR (d:Director) REQUIRE d.id IS UNIQUE;
+
+
+// =====================
+// USERS (10)
+// =====================
+
+CREATE
+(u1:User {id:1, name:"Gabriel"}),
+(u2:User {id:2, name:"Ana"}),
+(u3:User {id:3, name:"João"}),
+(u4:User {id:4, name:"Maria"}),
+(u5:User {id:5, name:"Carlos"}),
+(u6:User {id:6, name:"Fernanda"}),
+(u7:User {id:7, name:"Lucas"}),
+(u8:User {id:8, name:"Juliana"}),
+(u9:User {id:9, name:"Pedro"}),
+(u10:User {id:10, name:"Larissa"});
+
+
+// =====================
+// MOVIES & SERIES (10)
+// =====================
+
+CREATE
+(m1:Movie {id:1, title:"Inception"}),
+(m2:Movie {id:2, title:"Titanic"}),
+(m3:Movie {id:3, title:"Avengers"}),
+(m4:Movie {id:4, title:"Interstellar"}),
+(m5:Movie {id:5, title:"Joker"}),
+
+(s1:Series {id:6, title:"Breaking Bad"}),
+(s2:Series {id:7, title:"Stranger Things"}),
+(s3:Series {id:8, title:"The Witcher"}),
+(s4:Series {id:9, title:"Dark"}),
+(s5:Series {id:10, title:"Friends"});
+
+
+// =====================
+// GENRES
+// =====================
+
+CREATE
+(g1:Genre {id:1, name:"Ação"}),
+(g2:Genre {id:2, name:"Drama"}),
+(g3:Genre {id:3, name:"Ficção Científica"}),
+(g4:Genre {id:4, name:"Comédia"});
+
+
+// =====================
+// ACTORS
+// =====================
+
+CREATE
+(a1:Actor {id:1, name:"Leonardo DiCaprio"}),
+(a2:Actor {id:2, name:"Robert Downey Jr"}),
+(a3:Actor {id:3, name:"Bryan Cranston"});
+
+
+// =====================
+// DIRECTORS
+// =====================
+
+CREATE
+(d1:Director {id:1, name:"Christopher Nolan"}),
+(d2:Director {id:2, name:"James Cameron"}),
+(d3:Director {id:3, name:"Todd Phillips"});
+
+
+// =====================
+// RELATIONSHIPS
+// =====================
+
+// DIRECTED
+MATCH (d:Director {name:"Christopher Nolan"}), (m:Movie {title:"Inception"})
+CREATE (d)-[:DIRECTED]->(m);
+
+MATCH (d:Director {name:"Christopher Nolan"}), (m:Movie {title:"Interstellar"})
+CREATE (d)-[:DIRECTED]->(m);
+
+MATCH (d:Director {name:"James Cameron"}), (m:Movie {title:"Titanic"})
+CREATE (d)-[:DIRECTED]->(m);
+
+MATCH (d:Director {name:"Todd Phillips"}), (m:Movie {title:"Joker"})
+CREATE (d)-[:DIRECTED]->(m);
+
+
+// ACTED_IN
+MATCH (a:Actor {name:"Leonardo DiCaprio"}), (m:Movie {title:"Inception"})
+CREATE (a)-[:ACTED_IN]->(m);
+
+MATCH (a:Actor {name:"Leonardo DiCaprio"}), (m:Movie {title:"Titanic"})
+CREATE (a)-[:ACTED_IN]->(m);
+
+MATCH (a:Actor {name:"Robert Downey Jr"}), (m:Movie {title:"Avengers"})
+CREATE (a)-[:ACTED_IN]->(m);
+
+MATCH (a:Actor {name:"Bryan Cranston"}), (s:Series {title:"Breaking Bad"})
+CREATE (a)-[:ACTED_IN]->(s);
+
+
+// IN_GENRE
+MATCH (m:Movie {title:"Inception"}), (g:Genre {name:"Ficção Científica"})
+CREATE (m)-[:IN_GENRE]->(g);
+
+MATCH (m:Movie {title:"Interstellar"}), (g:Genre {name:"Ficção Científica"})
+CREATE (m)-[:IN_GENRE]->(g);
+
+MATCH (m:Movie {title:"Titanic"}), (g:Genre {name:"Drama"})
+CREATE (m)-[:IN_GENRE]->(g);
+
+MATCH (m:Movie {title:"Avengers"}), (g:Genre {name:"Ação"})
+CREATE (m)-[:IN_GENRE]->(g);
+
+MATCH (s:Series {title:"Friends"}), (g:Genre {name:"Comédia"})
+CREATE (s)-[:IN_GENRE]->(g);
+
+
+// WATCHED (com rating)
+MATCH (u:User {name:"Gabriel"}), (m:Movie {title:"Inception"})
+CREATE (u)-[:WATCHED {rating:5}]->(m);
+
+MATCH (u:User {name:"Ana"}), (s:Series {title:"Breaking Bad"})
+CREATE (u)-[:WATCHED {rating:5}]->(s);
+
+MATCH (u:User {name:"João"}), (m:Movie {title:"Joker"})
+CREATE (u)-[:WATCHED {rating:4}]->(m);
+
+MATCH (u:User {name:"Maria"}), (s:Series {title:"Friends"})
+CREATE (u)-[:WATCHED {rating:5}]->(s);
+
+MATCH (u:User {name:"Carlos"}), (m:Movie {title:"Avengers"})
+CREATE (u)-[:WATCHED {rating:4}]->(m);
+
+OBS1:Adicionei comentarios na linha de código para tornar a visualiação melhor;
+OBS2:Não Optei por fazer o LOAD CSV.
